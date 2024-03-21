@@ -9,17 +9,19 @@ const productSchema = new Schema({
   },
   price: {
     type: Number,
+    default: 0,
   },
   brand: {
     type: String,
   },
   discountPercentage: {
     type: Number,
+    default: 0,
   },
   description: {
     type: String,
   },
-  image: [
+  images: [
     {
       type: String,
     },
@@ -29,9 +31,19 @@ const productSchema = new Schema({
   },
   stock: {
     type: Number,
+    default: 0,
   },
   rating: {
     type: Number,
+    default: 0,
+  },
+  isHidden: {
+    type: Boolean,
+    default: false,
+  },
+  featured: {
+    type: Boolean,
+    default: false,
   },
 });
 

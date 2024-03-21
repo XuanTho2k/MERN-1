@@ -7,14 +7,26 @@ import StatusCodes, {
   OK,
 } from "http-status-codes";
 import Product from "../models/product";
-import { ObjectId } from "mongoose";
+import { ObjectId } from "mongodb";
 export const addProduct = async (req, res) => {
+  const { error } = addProductSchema.validate(req.body, {
+    abortEarly: false,
+  });
+  if (error) {
+    const messages = error.details.map(
+      (err) => err.message
+    );
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      messages,
+    });
+  }
   try {
     const product = await Product.create(req.body);
     if (product) {
-      return res
-        .status(StatusCodes.CREATED)
-        .json({ message: "Product created successfully" });
+      return res.status(StatusCodes.CREATED).json({
+        message: "Product created successfully",
+        product,
+      });
     }
   } catch (err) {
     return res
