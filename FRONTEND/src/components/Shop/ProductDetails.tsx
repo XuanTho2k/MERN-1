@@ -1,9 +1,7 @@
 import { IProduct } from "@/interfaces/product";
 import React from "react";
-type ProductDetailsProps = {
-  prod: IProduct;
-};
-const ProductDetails = ({ prod }: ProductDetailsProps) => {
+const ProductDetails: React.FC<IProduct> = ({ prod }) => {
+  console.log(prod);
   return (
     <div>
       <section className="text-gray-700 body-font overflow-hidden bg-white">
@@ -14,11 +12,11 @@ const ProductDetails = ({ prod }: ProductDetailsProps) => {
                 <img
                   alt="ecommerce"
                   className="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200"
-                  src={prod.thumbnail}
+                  src={prod.product.thumbnail}
                 />
               </div>
               <div className="flex flex-row w-1/2">
-                {prod.images?.map((img) => {
+                {prod.product.images?.map((img: string) => {
                   return (
                     <img
                       alt="ecommerce"
@@ -31,10 +29,10 @@ const ProductDetails = ({ prod }: ProductDetailsProps) => {
             </div>
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
-                {prod.brand}
+                {prod.product.brand}
               </h2>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-                {prod.title}
+                {prod.product.title}
               </h1>
 
               <div className="flex mb-4">
@@ -95,7 +93,7 @@ const ProductDetails = ({ prod }: ProductDetailsProps) => {
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                   <span className="text-gray-600 ml-3">
-                    {prod.rating} ratings
+                    {prod.product.rating} ratings
                   </span>
                 </span>
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200">
@@ -138,15 +136,16 @@ const ProductDetails = ({ prod }: ProductDetailsProps) => {
                 </span>
               </div>
               <p className="leading-relaxed">
-                {prod.description}
+                {prod.product.description}
               </p>
               <div className="flex flex-column">
                 <span className="mr-3">
-                  Stock: {prod.stock}
+                  Stock: {prod.product.stock}
                 </span>
               </div>
               <span className="mr-3">
-                Discount: {prod.discountPercentage} %
+                Discount: {prod.product.discountPercentage}{" "}
+                %
               </span>
               <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5">
                 <div className="flex">
@@ -182,12 +181,13 @@ const ProductDetails = ({ prod }: ProductDetailsProps) => {
               </div>
               <div className="flex">
                 <span className="title-font font-medium text-2xl text-gray-900 product-price__old">
-                  $ {prod.price}
+                  $ {prod.product.price}
                 </span>
                 <span className="title-font ml-2 font-medium text-2xl text-gray-900 ">
                   ${" "}
-                  {prod.price -
-                    (prod.price * prod.discountPercentage ??
+                  {prod.product.price -
+                    (prod.product.price *
+                      prod.product.discountPercentage ??
                       0) /
                       100}
                 </span>

@@ -17,11 +17,12 @@ const ProductList = (rating?: ProductListProp) => {
   });
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
-  const filterProducts = products?.filter(
+  const filterProducts = products.products.filter(
     (item: IProduct) => {
       return item.rating > (rating?.ratingProp ?? 0);
     }
   );
+  console.log(filterProducts);
   return (
     <div>
       <section className="news">
@@ -69,7 +70,7 @@ const ProductList = (rating?: ProductListProp) => {
                       </div>
                       <div className="product-actions">
                         <Link
-                          to={`/product/${prod.id}`}
+                          to={`/product/${prod._id}`}
                           className="btn  product-action__quickview"
                         >
                           Quick View

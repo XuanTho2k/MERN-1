@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/home";
-import ShopPage from "./pages/shop";
-import NotFoundPage from "./pages/notFound";
-import AboutPage from "./pages/about";
-import ContactPage from "./pages/contact";
-import DetailsProductPage from "./pages/details";
+import HomePage from "./pages/Shop/home";
+import ShopPage from "./pages/Shop/shop";
+import NotFoundPage from "./pages/Shop/notFound";
+import AboutPage from "./pages/Shop/about";
+import ContactPage from "./pages/Shop/contact";
+import DetailsProductPage from "./pages/Shop/details";
+import AddFormPage from "./pages/Admin/addProduct";
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
             element={<DetailsProductPage />}
           />
           <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <Routes>
+          <Route path="/admin" element={<AddFormPage />} />
         </Routes>
       </div>
     </>

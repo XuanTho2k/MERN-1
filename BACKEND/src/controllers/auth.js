@@ -1,4 +1,5 @@
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 import {
   StatusCodes,
   BAD_REQUEST,
@@ -24,8 +25,8 @@ export const userSignup = async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ messages });
   }
-  const existUser = await User.findOne({ email });
-  if (existUser) {
+  const existEmail = await User.findOne({ email });
+  if (existEmail) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: "Email already exist" });
@@ -43,12 +44,13 @@ export const userSignup = async (req, res) => {
   if (user) {
     return res
       .status(StatusCodes.CREATED)
-      .json({ message: "User created successfully" });
+      .json({ message: "User created successfully", user });
   }
 };
 
 export const userSignin = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password);
   const { error } = signinSchema.validate(req.body, {
     abortEarly: false,
   });
@@ -60,16 +62,34 @@ export const userSignin = async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ messages });
   }
-  const isEmailExist = await User.findOne({ email });
-  if (isEmailExist) {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Invalid email or password" });
+    }
     const isPasswordMatch = await bcryptjs.compare(
       password,
-      isEmailExist.password
+      user.password
     );
-    if (isPasswordMatch) {
-      return res
-        .status(StatusCodes.OK)
-        .json({ message: "User signin successfully" });
+    if (!isPasswordMatch) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Invalid email or password",
+      });
     }
+
+    const token = jwt.sign({ id: user._id }, "123456", {
+      expiresIn: "1h",
+    });
+    return res.status(StatusCodes.OK).json({
+      message: "User logged in successfully",
+      token,
+      user,
+    });
+  } catch (err) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: err.message });
   }
 };

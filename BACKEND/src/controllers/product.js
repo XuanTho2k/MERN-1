@@ -37,7 +37,6 @@ export const addProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   try {
-    console.log("hi");
     const products = await Product.find();
     if (products) {
       return res.status(OK).json({ products });

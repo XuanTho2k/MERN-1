@@ -43,14 +43,9 @@ export const signinSchema = Joi.object({
     "string.email": "Email should be a valid email",
     "any.required": "Email is required",
   }),
-  password: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-    .required()
-    .messages({
-      "string.base": "Password should be a type of text",
-      "string.empty": "Password should not be empty",
-      "string.pattern.base":
-        "Password should be a valid password",
-      "any.required": "Password is required",
-    }),
+  password: Joi.string().required().messages({
+    "string.base": "Password should be a type of text",
+    "string.empty": "Password should not be empty",
+    "any.required": "Password is required",
+  }),
 });
