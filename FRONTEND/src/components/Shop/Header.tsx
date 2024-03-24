@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Logo from "/assets/logo.svg";
 const Header = () => {
   return (
@@ -65,9 +65,11 @@ const Header = () => {
                 </span>
               </div>
               <div className="header-item-user">
-                <span>
-                  <img src="/assets/icons/4.svg" />
-                </span>
+                <Link to="/cart">
+                  <span>
+                    <img src="/assets/icons/4.svg" />
+                  </span>
+                </Link>
               </div>
             </div>
           </div>

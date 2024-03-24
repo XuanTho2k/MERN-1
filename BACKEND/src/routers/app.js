@@ -3,7 +3,6 @@ import productRouter from "./product";
 import categoryRouter from "./category";
 import userRouter from "./user";
 import authRouter from "./auth";
-//import authRouter from "./auth";
 
 const router = express.Router();
 

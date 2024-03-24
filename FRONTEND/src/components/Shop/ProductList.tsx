@@ -1,6 +1,5 @@
+import { useProductQuery } from "@/hooks/useProductsQuery";
 import { IProduct } from "@/interfaces/product";
-import { getAllProducts } from "@/services/product";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 type ProductListProp = {
   ratingProp: number;
@@ -11,18 +10,15 @@ const ProductList = (rating?: ProductListProp) => {
     data: products,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ["PRODUCT_KEY"],
-    queryFn: getAllProducts,
-  });
+  } = useProductQuery();
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
-  const filterProducts = products.products.filter(
+  console.log(products);
+  const filterProducts = products?.filter(
     (item: IProduct) => {
       return item.rating > (rating?.ratingProp ?? 0);
     }
   );
-  console.log(filterProducts);
   return (
     <div>
       <section className="news">

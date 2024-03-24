@@ -1,17 +1,20 @@
 import { Router } from "express";
-import {
-  createCategory,
-  editCategoryById,
-  getCategories,
-  softRemoveCategory,
-  getCategoryById,
-} from "../controllers/category";
+import CategoryController from "../controllers/categoryController";
 
 const categoryRouter = Router();
 
-categoryRouter.get("/", getCategories);
-categoryRouter.get("/:id", getCategoryById);
-categoryRouter.post("/", createCategory);
-categoryRouter.put("/edit/:id", editCategoryById);
-categoryRouter.put("/hide/:id", softRemoveCategory);
+categoryRouter.get("/", CategoryController.getCategories);
+categoryRouter.get(
+  "/:id",
+  CategoryController.getCategoryById
+);
+categoryRouter.post("/", CategoryController.createCategory);
+categoryRouter.put(
+  "/edit/:id",
+  CategoryController.editCategoryById
+);
+categoryRouter.put(
+  "/hide/:id",
+  CategoryController.softRemoveCategory
+);
 export default categoryRouter;

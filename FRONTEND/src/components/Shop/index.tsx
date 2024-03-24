@@ -1,6 +1,6 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import Banner from "./Banner";
+import Banner from "./Banners/Banner";
 import ProductList from "./ProductList";
 import Shop from "./Shop";
 import Blog from "./Blog";

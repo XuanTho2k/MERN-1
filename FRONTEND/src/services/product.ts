@@ -1,3 +1,4 @@
+import { IProduct } from "./../interfaces/product";
 import instance from "src/configs/axios";
 import { IProduct } from "@/interfaces/product";
 export const getAllProducts = async (): Promise<
@@ -5,7 +6,7 @@ export const getAllProducts = async (): Promise<
 > => {
   try {
     const res = await instance.get("/products");
-    return res.data;
+    return res.data.products;
   } catch (error) {
     return [];
   }
@@ -16,7 +17,7 @@ export const getProductById = async (
 ): Promise<IProduct | null> => {
   try {
     const res = await instance.get(`/products/${id}`);
-    return res.data;
+    return res.data.product;
   } catch (error) {
     return null;
   }

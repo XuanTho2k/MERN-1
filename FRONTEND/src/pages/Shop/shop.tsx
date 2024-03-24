@@ -1,14 +1,14 @@
-import {
-  Footer,
-  Header,
-  ProductList,
-} from "@/components/Shop";
+import { Footer, Header, Service } from "@/components/Shop";
+import ShopBanner from "@/components/Shop/Banners/ShopBanner";
+import ShopProducts from "@/components/Shop/ShopProducts";
 
 const ShopPage = () => {
   return (
     <>
       <Header />
-      <ProductList ratingProp={4.5} />
+      <ShopBanner />
+      <ShopProducts />
+      <Service />
       <Footer />
     </>
   );
