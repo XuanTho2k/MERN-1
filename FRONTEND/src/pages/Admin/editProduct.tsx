@@ -1,9 +1,9 @@
-import AddForm from "@/components/Admin/AddForm";
+import EditForm from "@/components/Admin/EditForm";
 import Navbar from "@/components/Admin/Navbar";
 import Sidebar from "@/components/Admin/Sidebar";
 import React, { useState } from "react";
 
-const AddProductPage = () => {
+const EditProductPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -23,10 +23,10 @@ const AddProductPage = () => {
         }
       >
         <Navbar onSidebarToggle={handleSidebarToggle} />
-        <AddForm />
+        <EditForm />
       </div>
     </div>
   );
 };
 
-export default AddProductPage;
+export default EditProductPage;

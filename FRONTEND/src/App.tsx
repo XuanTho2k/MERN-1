@@ -6,38 +6,53 @@ import NotFoundPage from "./pages/Shop/notFound";
 import AboutPage from "./pages/Shop/about";
 import ContactPage from "./pages/Shop/contact";
 import DetailsProductPage from "./pages/Shop/details";
-import AddFormPage from "./pages/Admin/addProduct";
 import CartPage from "./pages/Shop/cart";
 import CheckOutPage from "./pages/Shop/checkout";
+import LoginPage from "./pages/Shop/login";
+import AdminHomePage from "./pages/Admin/home";
+import ListProductsPage from "./pages/Admin/listProducts";
+import EditProductPage from "./pages/Admin/editProduct";
+import AddProductPage from "./pages/Admin/addProduct";
 
 function App() {
   return (
     <>
-      <div>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/cart" element={<CartPage />} />
+      <Routes>
+        <Route path="/">
+          <Route index element={<HomePage />} />
+          <Route path="shop" element={<ShopPage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route
-            path="/checkout"
+            path="checkout"
             element={<CheckOutPage />}
           />
 
+          <Route path="contact" element={<ContactPage />} />
           <Route
-            path="/contact"
-            element={<ContactPage />}
-          />
-          <Route
-            path="/product/:id"
+            path="product/:id"
             element={<DetailsProductPage />}
           />
+        </Route>
+      </Routes>
+      <Routes>
+        <Route path="/admin/">
+          <Route index element={<AdminHomePage />} />
+          <Route path="products/">
+            <Route index element={<ListProductsPage />} />
+            <Route
+              path="edit/:id"
+              element={<EditProductPage />}
+            />
+            <Route
+              path="add"
+              element={<AddProductPage />}
+            />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-        <Routes>
-          <Route path="/admin" element={<AddFormPage />} />
-        </Routes>
-      </div>
+        </Route>
+      </Routes>
     </>
   );
 }

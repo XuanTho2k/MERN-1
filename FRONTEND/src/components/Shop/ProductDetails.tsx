@@ -11,14 +11,13 @@ const ProductDetails: React.FC = () => {
     isError,
   } = useProductQuery(id);
 
-  const { count, increase, decrement, increment } =
-    useCounter();
+  const { count, decrement, increment } = useCounter();
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
   return (
     <div>
-      <section className="text-gray-700 body-font overflow-hidden bg-white">
+      <section className="text-gray-700 body-font mx-auto overflow-hidden bg-white">
         <div className=" px-5 py-24 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-row gap-[60px]">
             <div className="flex flex-row gap-[30px] ml-[100px]">
@@ -188,7 +187,7 @@ const ProductDetails: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex flex-row gap-[10px]">
+                <div className="flex flex-row gap-[40px]">
                   <div className="border border-gray-300 w-[123px] h-[64px] px-2 py-3 flex flex-row justify-between aligns-center gap-[15px]  text-[16px] rounded-[0.6rem] pt-[20px]">
                     <button
                       className="h-[24px]"

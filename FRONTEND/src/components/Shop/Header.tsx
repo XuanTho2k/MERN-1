@@ -50,9 +50,9 @@ const Header = () => {
             </nav>
             <div className="header-items">
               <div className="header-item-user">
-                <span>
+                <Link to="/login">
                   <img src="/assets/icons/1.svg" />
-                </span>
+                </Link>
               </div>
               <div className="header-item-user">
                 <span>

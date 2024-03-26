@@ -1,9 +1,9 @@
-import AddForm from "@/components/Admin/AddForm";
 import Navbar from "@/components/Admin/Navbar";
+import ProductsList from "@/components/Admin/ProductsList";
 import Sidebar from "@/components/Admin/Sidebar";
 import React, { useState } from "react";
 
-const AddProductPage = () => {
+const ListProductsPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -23,10 +23,10 @@ const AddProductPage = () => {
         }
       >
         <Navbar onSidebarToggle={handleSidebarToggle} />
-        <AddForm />
+        <ProductsList />
       </div>
     </div>
   );
 };
 
-export default AddProductPage;
+export default ListProductsPage;

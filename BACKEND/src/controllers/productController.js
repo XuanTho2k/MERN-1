@@ -85,6 +85,7 @@ class ProductController {
         req.body,
         { new: true }
       );
+      return res.status(OK).json({ product });
     } catch (err) {
       return res
         .status(StatusCodes.BAD_REQUEST)

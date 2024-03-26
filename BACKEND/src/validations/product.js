@@ -13,7 +13,7 @@ export const addProductSchema = Joi.object({
     "number.base": "Price should be a type of number",
     "number.empty": "Price should not be empty",
   }),
-  description: Joi.string().min(3).max(200).messages({
+  description: Joi.string().min(3).max(300).messages({
     "string.base": "Description should be a type of text",
     "string.empty": "Description should not be empty",
     "string.min":
@@ -57,6 +57,13 @@ export const addProductSchema = Joi.object({
     "number.base": "Rating should be a type of number",
     "number.empty": "Rating should not be empty",
   }),
+  isHidden: Joi.boolean().messages({
+    "boolean.base": "isHidden should be a type of boolean",
+    "boolean.empty": "isHidden should not be empty",
+  }),
+  featured: Joi.boolean().messages({
+    "boolean.base": "Featured should be a type of boolean",
+  }),
 });
 
 export const updateProductSchema = Joi.object({
@@ -72,7 +79,7 @@ export const updateProductSchema = Joi.object({
     "number.base": "Price should be a type of number",
     "number.empty": "Price should not be empty",
   }),
-  description: Joi.string().min(3).max(100).messages({
+  description: Joi.string().min(3).max(200).messages({
     "string.base": "Description should be a type of text",
     "string.empty": "Description should not be empty",
     "string.min":
@@ -107,5 +114,21 @@ export const updateProductSchema = Joi.object({
   discountPercentage: Joi.number().messages({
     "number.base": "Discount should be a type of number",
     "number.empty": "Discount should not be empty",
+  }),
+  isHidden: Joi.boolean().messages({
+    "boolean.base": "isHidden should be a type of boolean",
+    "boolean.empty": "isHidden should not be empty",
+  }),
+  featured: Joi.boolean().messages({
+    "boolean.base": "Featured should be a type of boolean",
+    "boolean.empty": "Featured should not be empty",
+  }),
+  rating: Joi.number().messages({
+    "number.base": "Rating should be a type of number",
+    "number.empty": "Rating should not be empty",
+  }),
+  thumbnail: Joi.string().messages({
+    "string.base": "Brand should be a type of text",
+    "string.empty": "Brand should not be empty",
   }),
 });
