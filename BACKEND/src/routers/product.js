@@ -5,6 +5,10 @@ const productRouter = express.Router();
 
 productRouter.get("/", ProductController.getProducts);
 productRouter.get("/:id", ProductController.getProductById);
+productRouter.get(
+  "/category/:id",
+  ProductController.getByCategoryId
+);
 productRouter.post("/", ProductController.addProduct);
 productRouter.put(
   "/edit/:id",

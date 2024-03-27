@@ -1,3 +1,4 @@
+import { ref } from "joi";
 import mongoose, { Schema } from "mongoose";
 
 const categorySchema = new Schema(
@@ -6,10 +7,13 @@ const categorySchema = new Schema(
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     isHidden: { type: Boolean, default: false },
-    products: {
-      type: [String],
-      default: [],
-    },
+    products: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+        default: [],
+      },
+    ],
   },
   { timestamps: true, versionKey: false }
 );

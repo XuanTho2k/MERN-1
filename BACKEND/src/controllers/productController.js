@@ -7,9 +7,13 @@ import StatusCodes, {
   OK,
 } from "http-status-codes";
 import Product from "../models/ProductModel";
-import { errorMessages } from "../constants/messages";
+import {
+  errorMessages,
+  successMessages,
+} from "../constants/messages";
+import { validAuth } from "../utils/validAuth";
 class ProductController {
-  static addProduct = async (req, res) => {
+  static addProduct = async (req, res, next) => {
     try {
       //Check if the input is valid
       const error = validAuth(
@@ -27,26 +31,22 @@ class ProductController {
         });
       }
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 
-  static getProducts = async (req, res) => {
+  static getProducts = async (req, res, next) => {
     try {
       const products = await Product.find();
       if (products) {
         return res.status(OK).json({ products });
       }
     } catch (error) {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: error.message });
+      next(err);
     }
   };
 
-  static getProductById = async (req, res) => {
+  static getProductById = async (req, res, next) => {
     try {
       const product = await Product.findById(req.params.id);
       if (!product) {
@@ -56,13 +56,24 @@ class ProductController {
       }
       return res.status(OK).json({ product });
     } catch {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Product not found" });
+      next(err);
+    }
+  };
+  static getByCategoryId = async (req, res, next) => {
+    try {
+      const products = await Product.find({
+        category: req.params.id,
+      }).populate("categories");
+      return res.status(StatusCodes.OK).json({
+        message: successMessages.READ_SUCCESS,
+        products,
+      });
+    } catch (err) {
+      next(err);
     }
   };
 
-  static editProductById = async (req, res) => {
+  static editProductById = async (req, res, next) => {
     try {
       //Check if the input is valid
       const error = validAuth(
@@ -79,13 +90,11 @@ class ProductController {
       );
       return res.status(OK).json({ product });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 
-  static softRemoveProductById = async (req, res) => {
+  static softRemoveProductById = async (req, res, next) => {
     try {
       const product = await Product.findByIdAndUpdate(
         req.params.id,

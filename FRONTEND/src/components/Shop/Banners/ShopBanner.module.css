@@ -1,0 +1,42 @@
+.list_filter_child {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  display: none;
+  opacity: 0;
+  padding: 10px 10px 0;
+  position: absolute;
+  transition: 0.5s;
+  width: auto;
+  z-index: -1;
+  top: 40px;
+}
+
+.active {
+  display: block;
+  opacity: 1;
+  z-index: 1000;
+}
+
+.arrow_filter {
+  width: 27px;
+  height: 14px;
+  top: 27px;
+  left: 45px;
+  position: absolute;
+  overflow: hidden;
+}
+
+.arrow_filter::before {
+  content: "";
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  background: #fff;
+  transform: rotate(45deg);
+  top: 5px;
+  left: 0px;
+  box-shadow: -2px -2px 5px -4px;
+  z-index: 2000;
+}

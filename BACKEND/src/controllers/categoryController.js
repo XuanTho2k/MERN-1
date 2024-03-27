@@ -43,7 +43,7 @@ class CategoryController {
     try {
       const category = await Category.findById(
         req.params.id
-      );
+      ).populate("products");
       return res.status(StatusCodes.OK).json({
         message: successMessages.CREATE_SUCCESS,
         category,
