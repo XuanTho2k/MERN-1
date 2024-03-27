@@ -7,20 +7,18 @@ import StatusCodes, {
   OK,
 } from "http-status-codes";
 import Product from "../models/ProductModel";
+import { errorMessages } from "../constants/messages";
 class ProductController {
   static addProduct = async (req, res) => {
-    const { error } = addProductSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    if (error) {
-      const messages = error.details.map(
-        (err) => err.message
-      );
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        messages,
-      });
-    }
     try {
+      //Check if the input is valid
+      const error = validAuth(
+        req.body,
+        addProductSchema,
+        res
+      );
+      if (error) return;
+
       const product = await Product.create(req.body);
       if (product) {
         return res.status(StatusCodes.CREATED).json({
@@ -65,21 +63,15 @@ class ProductController {
   };
 
   static editProductById = async (req, res) => {
-    const { error } = updateProductSchema.validate(
-      req.body,
-      {
-        abortEarly: false,
-      }
-    );
-    if (error) {
-      const messages = error.details.map(
-        (err) => err.message
-      );
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ messages });
-    }
     try {
+      //Check if the input is valid
+      const error = validAuth(
+        req.body,
+        updateProductSchema,
+        res
+      );
+      if (error) return;
+
       const product = await Product.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -103,13 +95,11 @@ class ProductController {
       if (!product) {
         return res
           .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Product not found" });
+          .json({ message: errorMessages.NOT_FOUND });
       }
       return res.status(OK).json({ product });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 }

@@ -10,31 +10,31 @@ import {
   signupSchema,
   signinSchema,
 } from "../validations/auth";
+import { validAuth } from "../utils/validAuth";
+import {
+  errorMessages,
+  successMessages,
+} from "../constants/messages";
+import { hashPassword } from "../utils/hashPassword";
 class AuthController {
-  static userSignup = async (req, res) => {
-    const { email, username, password, confirmPassword } =
-      req.body;
-    const { error } = signupSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    if (error) {
-      const messages = error.details.map(
-        (err) => err.message
-      );
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ messages });
-    }
+  static userSignup = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    //check if the input is valid
+    validAuth(req.body, signupSchema);
+
+    //check if the email already exist
     const existEmail = await User.findOne({ email });
     if (existEmail) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Email already exist" });
+        .json({ message: errorMessages.EMAIL_EXISTS });
     }
-    const hashedPassword = await bcryptjs.hash(
-      password,
-      12
-    );
+
+    //hash the password
+    const hashPassword = await hashPassword(password);
+
+    //create the user
     const role =
       (await User.countDocuments({})) === 0
         ? "admin"
@@ -46,55 +46,48 @@ class AuthController {
     });
     if (user) {
       return res.status(StatusCodes.CREATED).json({
-        message: "User created successfully",
+        message: successMessages.CREATE_SUCCESS,
         user,
       });
     }
   };
 
-  static userSignin = async (req, res) => {
+  static userSignin = async (req, res, next) => {
     const { email, password } = req.body;
-    console.log(email, password);
-    const { error } = signinSchema.validate(req.body, {
-      abortEarly: false,
-    });
-    if (error) {
-      const messages = error.details.map(
-        (err) => err.message
-      );
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ messages });
-    }
+    // Check if the user input is valid
+    validAuth(req.body, signinSchema);
+
     try {
+      // Check if the user exist
       const user = await User.findOne({ email });
       if (!user) {
         return res
           .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid email or password" });
+          .json({ message: errorMessages.NOT_FOUND });
       }
+
+      //Check if the password match
       const isPasswordMatch = await bcryptjs.compare(
         password,
         user.password
       );
       if (!isPasswordMatch) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          message: "Invalid email or password",
+          message: errorMessages.INVALID_PASSWORD,
         });
       }
 
+      //Generate token
       const token = jwt.sign({ id: user._id }, "123456", {
         expiresIn: "1h",
       });
       return res.status(StatusCodes.OK).json({
-        message: "User logged in successfully",
+        message: successMessages.LOGIN_SUCCESS,
         token,
         user,
       });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 }

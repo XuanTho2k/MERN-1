@@ -1,115 +1,99 @@
 import StatusCodes, {
   BAD_REQUEST,
 } from "http-status-codes";
-import { ObjectId } from "mongodb";
-import mongoose from "mongoose";
 import Category from "../models/CategoryModel";
 import { addCategorySchema } from "../validations/category";
+import { validAuth } from "../utils/validAuth";
+import {
+  errorMessages,
+  successMessages,
+} from "../constants/messages";
+import { valid } from "joi";
 class CategoryController {
-  static createCategory = async (req, res) => {
-    const { error } = addCategorySchema.validate(req.body);
-    if (error) {
-      const messages = error.details.map(
-        (err) => err.message
-      );
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ messages });
-    }
+  static createCategory = async (req, res, next) => {
     try {
+      //Check if the input is valid
+      const error = validAuth(
+        req.body,
+        addCategorySchema,
+        res
+      );
+      if (error !== undefined) return;
+
+      //Check if slug is already in use
+      const slugExist = await Category.findOne({
+        slug: req.body.slug,
+      });
+      if (slugExist)
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          message: errorMessages.SLUG_EXISTS,
+        });
+      //Create the category
       const category = await Category.create(req.body);
-      if (!category) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Category not created" });
-      }
       return res.status(StatusCodes.CREATED).json({
-        message: "Category created successfully",
+        message: successMessages.CREATE_SUCCESS,
         category,
       });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 
-  static getCategoryById = async (req, res) => {
+  static getCategoryById = async (req, res, next) => {
     try {
       const category = await Category.findById(
-        new ObjectId(req.params.id)
+        req.params.id
       );
-      if (!category) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Category not found" });
-      }
-      return res.status(StatusCodes.OK).json({ category });
+      return res.status(StatusCodes.OK).json({
+        message: successMessages.CREATE_SUCCESS,
+        category,
+      });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 
-  static getCategories = async (req, res) => {
+  static getCategories = async (req, res, next) => {
     try {
       const categories = await Category.find();
       if (categories) {
-        return res
-          .status(StatusCodes.OK)
-          .json({ categories });
+        return res.status(StatusCodes.OK).json({
+          message: successMessages.FOUND_SUCCESS,
+          categories,
+        });
       }
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Categories not found" });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 
-  static editCategoryById = async (req, res) => {
+  static editCategoryById = async (req, res, next) => {
     try {
       const category = await Category.findByIdAndUpdate(
         req.params.id,
         req.body
       );
-      if (!category) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Category not found" });
-      }
-      return res
-        .status(StatusCodes.OK)
-        .json({ message: "Category updated successfully" });
+      return res.status(StatusCodes.OK).json({
+        message: successMessages.UPDATE_SUCCESS,
+        category,
+      });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 
-  static softRemoveCategory = async (req, res) => {
+  static softRemoveCategory = async (req, res, next) => {
     try {
       const category = await Category.findByIdAndUpdate(
         req.params.id,
         { isHidden: true }
       );
-      if (!category) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Category not found" });
-      }
       return res.status(StatusCodes.OK).json({
-        message: "Category removed successfully",
+        message: successMessages.SOFT_DELETE_SUCCESS,
         category,
       });
     } catch (err) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: err.message });
+      next(err);
     }
   };
 }

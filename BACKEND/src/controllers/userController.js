@@ -27,7 +27,6 @@ class UserController {
       });
     }
   };
-
   static getUserById = async (req, res) => {
     try {
       const data = await UserModel.findById(req.params.id);
