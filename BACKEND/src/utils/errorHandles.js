@@ -10,7 +10,6 @@ export const errorHandler = (err, req, res) => {
 };
 
 export const errorHandleNotFound = (req, res, next) => {
-  console.log("fasdfds");
   const error = new Error(errorMessages.NOT_FOUND);
   error.status = 404;
   next(error);

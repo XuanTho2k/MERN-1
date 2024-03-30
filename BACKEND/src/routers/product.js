@@ -9,7 +9,12 @@ productRouter.get(
   "/category/:id",
   ProductController.getByCategoryId
 );
+productRouter.get(
+  "/:categoryId/related/:id",
+  ProductController.related
+);
 productRouter.post("/", ProductController.addProduct);
+
 productRouter.put(
   "/edit/:id",
   ProductController.editProductById
@@ -17,6 +22,11 @@ productRouter.put(
 productRouter.put(
   "/hide/:id",
   ProductController.softRemoveProductById
+);
+
+productRouter.delete(
+  "/delete/:id",
+  ProductController.hardRemoveProductById
 );
 
 export default productRouter;

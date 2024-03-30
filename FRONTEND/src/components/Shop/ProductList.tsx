@@ -1,11 +1,45 @@
 import { useProductQuery } from "@/hooks/useProductsQuery";
+import { useLocalStorage } from "@/hooks/useStorage";
+import { ICategory } from "@/interfaces/category";
 import { IProduct } from "@/interfaces/product";
+import CartService from "@/services/cart";
+import {
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 type ProductListProp = {
   ratingProp: number;
 };
 
 const ProductList = (rating?: ProductListProp) => {
+  // add to cart btn
+  const queryClient = useQueryClient();
+  const [user] = useLocalStorage("user", {});
+  const userId = user?.user?._id;
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      productId,
+      quantity,
+    }: {
+      productId: string | number;
+      quantity: number;
+    }) => {
+      const { data } = CartService.addItem({
+        userId,
+        productId,
+        quantity,
+      });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["CARTS_KEY", userId],
+      });
+    },
+  });
+
+  //lay products tu api
   const {
     data: products,
     isLoading,
@@ -13,7 +47,6 @@ const ProductList = (rating?: ProductListProp) => {
   } = useProductQuery();
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
-  console.log(products);
   const filterProducts = products?.filter(
     (item: IProduct) => {
       return item.rating > (rating?.ratingProp ?? 0);
@@ -48,7 +81,11 @@ const ProductList = (rating?: ProductListProp) => {
                           </a>
                         </h3>
                         <a className="product__category">
-                          {prod.category}
+                          {prod.category.map(
+                            (cate: ICategory) => {
+                              return cate.name;
+                            }
+                          )}
                         </a>
                         <div className="product-price">
                           <span className="product-price__new">
@@ -69,9 +106,17 @@ const ProductList = (rating?: ProductListProp) => {
                           to={`/product/${prod._id}`}
                           className="btn  product-action__quickview"
                         >
-                          Quick View
+                          View Details
                         </Link>
-                        <button className="btn product-action__addtocart">
+                        <button
+                          onClick={() =>
+                            mutate({
+                              productId: prod._id,
+                              quantity: 1,
+                            })
+                          }
+                          className="btn product-action__addtocart"
+                        >
                           Add To Cart
                         </button>
                         <div className="product-actions-more">

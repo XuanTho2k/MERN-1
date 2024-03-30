@@ -11,7 +11,7 @@ import {
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT || 8080;
+const { PORT, MONGO_URI } = process.env;
 
 //middle ware
 app.use(cors());
@@ -20,7 +20,7 @@ app.use(morgan("tiny"));
 app.use(express.urlencoded({ extended: true }));
 
 //connect db
-connectDB(process.env.MONGO_URI);
+connectDB(MONGO_URI);
 
 //route
 app.use("/api/v1", router);

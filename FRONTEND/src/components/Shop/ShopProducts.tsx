@@ -1,22 +1,43 @@
-import React from "react";
+import instance from "@/configs/axios";
+import useCategoryQuery from "@/hooks/useCategoryQuery";
+import useProductsCategory from "@/hooks/useProductsCategory";
+import { ICategory } from "@/interfaces/category";
+import { IProduct } from "@/interfaces/product";
+import { CategoryContext } from "@/pages/Shop/shop";
+import CategoryService from "@/services/category";
+import { getAllProducts } from "@/services/product";
+import axios from "axios";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 const ShopProducts = () => {
-  const a = Array.from({ length: 20 }, (_, i) => i + 1);
+  const [category] = useContext(CategoryContext);
+  console.log(category);
+  const { data, isLoading, isError } =
+    useProductsCategory(category);
 
+  const cate = useCategoryQuery(category);
+
+  if (isLoading) return <div>Loading ....</div>;
+  if (isError) return <div>isError</div>;
   return (
     <div>
       <section className="news mt-[80px]">
         <div className="container">
+          <div className="section-heading">
+            <h2 className="section-heading__title">
+              {cate.data?.name}
+            </h2>
+          </div>
           <div className="section-body">
             <div className="product-list">
               {/*End .product-item*/}
-              {a.map(() => {
+              {data.map((item: IProduct, idx: number) => {
                 return (
-                  <div key="" className="product-item">
+                  <div key={idx} className="product-item">
                     <div className="product-image">
                       <img
-                        src=""
+                        src={item.thumbnail}
                         className="product__thumbnail"
                       />
                       <span className="product-sale">
@@ -25,10 +46,16 @@ const ShopProducts = () => {
                     </div>
                     <div className="product-info">
                       <h3 className="product__name">
-                        <a className="product__link">""</a>
+                        <a className="product__link">
+                          {item.title}
+                        </a>
                       </h3>
                       <a className="product__category">
-                        ""
+                        {item.category.map(
+                          (cate: ICategory) => {
+                            return cate.name;
+                          }
+                        )}
                       </a>
                       <div className="product-price">
                         <span className="product-price__new">
@@ -41,10 +68,10 @@ const ShopProducts = () => {
                     </div>
                     <div className="product-actions">
                       <Link
-                        to=""
+                        to={`/product/${item._id}`}
                         className="btn  product-action__quickview"
                       >
-                        Quick View
+                        View Details
                       </Link>
                       <button className="btn product-action__addtocart">
                         Add To Cart

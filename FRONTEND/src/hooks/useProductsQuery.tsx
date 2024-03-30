@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useProductQuery = (id?: string | number) => {
   const { data, ...rest } = useQuery({
-    queryKey: ["PRODUCT_KEY", id],
+    queryKey: ["PRODUCTS_KEY", id],
     queryFn: async () => {
       return id
         ? await getProductById(id)

@@ -1,15 +1,21 @@
 import { Footer, Header, Service } from "@/components/Shop";
 import ShopBanner from "@/components/Shop/Banners/ShopBanner";
 import ShopProducts from "@/components/Shop/ShopProducts";
-import { useState } from "react";
+import { createContext, useState } from "react";
 
+export const CategoryContext = createContext();
 const ShopPage = () => {
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState(undefined);
+
   return (
     <>
       <Header />
-      <ShopBanner />
-      <ShopProducts />
+      <CategoryContext.Provider
+        value={[category, setCategory]}
+      >
+        <ShopBanner />
+        <ShopProducts />
+      </CategoryContext.Provider>
       <Service />
       <Footer />
     </>

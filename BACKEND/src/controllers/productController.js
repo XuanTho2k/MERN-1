@@ -12,6 +12,7 @@ import {
   successMessages,
 } from "../constants/messages";
 import { validAuth } from "../utils/validAuth";
+import Category from "../models/CategoryModel";
 class ProductController {
   static addProduct = async (req, res, next) => {
     try {
@@ -37,9 +38,14 @@ class ProductController {
 
   static getProducts = async (req, res, next) => {
     try {
-      const products = await Product.find();
+      const products = await Product.find().populate(
+        "category"
+      );
       if (products) {
-        return res.status(OK).json({ products });
+        return res.status(OK).json({
+          message: successMessages.READ_SUCCESS,
+          products,
+        });
       }
     } catch (error) {
       next(err);
@@ -63,7 +69,7 @@ class ProductController {
     try {
       const products = await Product.find({
         category: req.params.id,
-      }).populate("categories");
+      }).populate("category");
       return res.status(StatusCodes.OK).json({
         message: successMessages.READ_SUCCESS,
         products,
@@ -110,6 +116,33 @@ class ProductController {
     } catch (err) {
       next(err);
     }
+  };
+  static hardRemoveProductById = async (req, res, next) => {
+    try {
+      const product = await Product.findByIdAndDelete(
+        req.params.id
+      );
+      return res.status(200).json({
+        message: successMessages.DELETE_SUCCESS,
+        product,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
+  static related = async (req, res) => {
+    try {
+      const products = await Product.find({
+        category: req.params.categoryId,
+        _id: { $ne: req.params.id },
+      });
+      if (!products) {
+        return res.status(400).json({
+          message: "Not Found Products",
+        });
+      }
+      return res.status(200).json(products);
+    } catch (error) {}
   };
 }
 export default ProductController;

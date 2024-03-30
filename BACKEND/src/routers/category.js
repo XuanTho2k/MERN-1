@@ -17,4 +17,9 @@ categoryRouter.put(
   "/hide/:id",
   CategoryController.softRemoveCategory
 );
+
+categoryRouter.delete(
+  "/delete/:id",
+  CategoryController.hardRemove
+);
 export default categoryRouter;

@@ -1,5 +1,7 @@
+import useCategoryQuery from "@/hooks/useCategoryQuery";
 import useProductMutation from "@/hooks/useProductMutation";
 import { useProductQuery } from "@/hooks/useProductsQuery";
+import { ICategory } from "@/interfaces/category";
 import { IProduct } from "@/interfaces/product";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -14,6 +16,11 @@ const EditForm = () => {
   useEffect(() => {
     form.reset(dataProduct);
   }, [data]);
+
+  //category data from api
+  const category = useCategoryQuery();
+
+  console.log(category.data);
   if (isError) return <div>Error</div>;
   if (isLoading) return <div>Loading...</div>;
 
@@ -60,11 +67,16 @@ const EditForm = () => {
               <div className="mt-2">
                 <input
                   type="text"
-                  {...form.register("title")}
+                  {...form.register("title", {
+                    required: true,
+                  })}
                   id="first-name"
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {form.formState.errors.title && (
+                  <span>Name is required</span>
+                )}
               </div>
             </div>
 
@@ -119,9 +131,19 @@ const EditForm = () => {
                   autoComplete="country-name"
                   className="block w-full rounded-md border-0 py-1.5 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
-                  <option>United States</option>
-                  <option>Canada</option>
-                  <option>Mexico</option>
+                  {category.data.map((item: ICategory) => {
+                    return (
+                      <option
+                        value={item._id}
+                        selected={
+                          item._id ===
+                          form.getValues("category")
+                        }
+                      >
+                        {item.name}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
             </div>

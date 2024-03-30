@@ -8,7 +8,6 @@ import {
   errorMessages,
   successMessages,
 } from "../constants/messages";
-import { valid } from "joi";
 class CategoryController {
   static createCategory = async (req, res, next) => {
     try {
@@ -40,12 +39,14 @@ class CategoryController {
   };
 
   static getCategoryById = async (req, res, next) => {
+    console.log("helo");
+    console.log(req.params.id);
     try {
       const category = await Category.findById(
         req.params.id
       ).populate("products");
       return res.status(StatusCodes.OK).json({
-        message: successMessages.CREATE_SUCCESS,
+        message: successMessages.READ_SUCCESS,
         category,
       });
     } catch (err) {
@@ -94,6 +95,19 @@ class CategoryController {
       });
     } catch (err) {
       next(err);
+    }
+  };
+  static hardRemove = async (req, res, next) => {
+    try {
+      const category = await Category.findByIdAndDelete(
+        req.params.id
+      );
+      return res.status(StatusCodes.OK).json({
+        message: successMessages.DELETE_SUCCESS,
+        category,
+      });
+    } catch (error) {
+      next(error);
     }
   };
 }

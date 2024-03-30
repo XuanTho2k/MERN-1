@@ -6,9 +6,8 @@ const AddForm = () => {
     useProductMutation({
       action: "CREATE",
     });
-  if (isSuccess) {
-    console.log("Product created");
-  }
+
+  if (isError) return <div>Error</div>;
   return (
     <>
       <form

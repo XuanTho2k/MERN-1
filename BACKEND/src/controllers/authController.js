@@ -1,5 +1,8 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+const { JWT_SECRET } = process.env;
 import {
   StatusCodes,
   BAD_REQUEST,
@@ -20,42 +23,48 @@ class AuthController {
   static userSignup = async (req, res, next) => {
     const { email, password } = req.body;
 
-    //check if the input is valid
-    validAuth(req.body, signupSchema);
+    try {
+      //check if the input is valid
+      const error = validAuth(req.body, signupSchema);
+      if (error) return;
 
-    //check if the email already exist
-    const existEmail = await User.findOne({ email });
-    if (existEmail) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: errorMessages.EMAIL_EXISTS });
-    }
+      //check if the email already exist
+      const existEmail = await User.findOne({ email });
+      if (existEmail) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: errorMessages.EMAIL_EXISTS });
+      }
 
-    //hash the password
-    const hashPassword = await hashPassword(password);
+      //hash the password
+      const hashPw = await hashPassword(password);
 
-    //create the user
-    const role =
-      (await User.countDocuments({})) === 0
-        ? "admin"
-        : "user";
-    const user = await User.create({
-      ...req.body,
-      password: hashedPassword,
-      role,
-    });
-    if (user) {
-      return res.status(StatusCodes.CREATED).json({
-        message: successMessages.CREATE_SUCCESS,
-        user,
+      //create the user
+      const role =
+        (await User.countDocuments({})) === 0
+          ? "admin"
+          : "user";
+      const user = await User.create({
+        ...req.body,
+        password: hashPw,
+        role,
       });
+      if (user) {
+        return res.status(StatusCodes.CREATED).json({
+          message: successMessages.CREATE_SUCCESS,
+          user,
+        });
+      }
+    } catch (error) {
+      next(err);
     }
   };
 
   static userSignin = async (req, res, next) => {
     const { email, password } = req.body;
     // Check if the user input is valid
-    validAuth(req.body, signinSchema);
+    const error = validAuth(req.body, signinSchema);
+    if (error) return;
 
     try {
       // Check if the user exist
@@ -78,7 +87,7 @@ class AuthController {
       }
 
       //Generate token
-      const token = jwt.sign({ id: user._id }, "123456", {
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: "1h",
       });
       return res.status(StatusCodes.OK).json({

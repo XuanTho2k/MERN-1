@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./ShopBanner.module.css";
+import { useQuery } from "@tanstack/react-query";
+import CategoryService from "@/services/category";
+import { CategoryContext } from "@/pages/Shop/shop";
+import { ICategory } from "@/interfaces/category";
+import useCategoryQuery from "@/hooks/useCategoryQuery";
 
 const ShopBanner = () => {
-  const [filter, setFilter] = React.useState(false);
+  const [category, setCategory] =
+    useContext(CategoryContext);
+  const { data: dataCategories } = useCategoryQuery();
+  const [filter, setFilter] = React.useState(true);
   const Btn_filter = () => {
     setFilter(!filter);
+  };
+
+  const handleCategory = (id: string | number) => {
+    setCategory(id);
   };
   return (
     <div>
@@ -40,16 +52,44 @@ const ShopBanner = () => {
                 }`}
               >
                 <div
-                  className={`${styles.list_filter} flex flex-row gap-[100px]`}
+                  className={`${styles.list_filter} flex flex-row gap-[200px]`}
                 >
                   <div>
                     <p className="text-[30px] mb-2">
                       Categories
                     </p>
                     <ul className="flex flex-wrap gap-[10px] max-w-[170px]">
+                      {dataCategories?.map(
+                        (item: ICategory, idx) => {
+                          return (
+                            <li key={idx}>
+                              <button
+                                onClick={() =>
+                                  handleCategory(item._id)
+                                }
+                                className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]"
+                              >
+                                {item.name}
+                              </button>
+                            </li>
+                          );
+                        }
+                      )}
                       <li>
                         <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fds
+                          ALL
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-[30px] mb-2">
+                      Brand
+                    </p>
+                    <ul className="flex flex-wrap gap-[10px] max-w-[170px]">
+                      <li>
+                        <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
+                          Iphone
                         </button>
                       </li>
                       <li>
@@ -65,45 +105,23 @@ const ShopBanner = () => {
                     </ul>
                   </div>
                   <div>
-                    <p className="text-[30px] mb-2">
-                      Categories
+                    <p className="text-[30px] mb-2 w-[220px]">
+                      Price
                     </p>
-                    <ul className="flex flex-wrap gap-[10px] max-w-[170px]">
+                    <ul className="flex flex-wrap gap-[10px] max-w-[220px]">
                       <li>
-                        <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fds
+                        <button className=" w-auto border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
+                          99-199$
                         </button>
                       </li>
                       <li>
                         <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fdfsdfdsfdsfs
+                          299-399$
                         </button>
                       </li>
                       <li>
                         <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fdsdfasdfasdf
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="text-[30px] mb-2">
-                      Categories
-                    </p>
-                    <ul className="flex flex-wrap gap-[10px] max-w-[170px]">
-                      <li>
-                        <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fds
-                        </button>
-                      </li>
-                      <li>
-                        <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fdfsdfdsfdsfs
-                        </button>
-                      </li>
-                      <li>
-                        <button className="border p-3 rounded-lg text-[#444] bg-[#f3f4f6] focus:border-[#B88E2F] focus:text-[#B88E2F] focus:bg-[#fef2f2]">
-                          fdsdfasdfasdf
+                          999-1999$
                         </button>
                       </li>
                     </ul>
@@ -118,10 +136,7 @@ const ShopBanner = () => {
                   >
                     Close
                   </button>
-                  <button
-                    onClick={Btn_filter}
-                    className="w-[49%] m-2 text-[18px] text-white p-2 bg-[#b88e2f]  active:scale-90 duration-300"
-                  >
+                  <button className="w-[49%] m-2 text-[18px] text-white p-2 bg-[#b88e2f]  active:scale-90 duration-300">
                     Results
                   </button>
                 </div>

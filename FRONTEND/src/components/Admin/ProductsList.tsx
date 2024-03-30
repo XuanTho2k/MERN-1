@@ -1,9 +1,10 @@
 import { useProductQuery } from "@/hooks/useProductsQuery";
 import { IProduct } from "@/interfaces/product";
-import React from "react";
+import React, { useEffect } from "react";
 
 import styles from "./ProductsList.module.css";
 import { Link } from "react-router-dom";
+import useProductMutation from "@/hooks/useProductMutation";
 
 const ProductsList = () => {
   const {
@@ -11,9 +12,15 @@ const ProductsList = () => {
     isLoading,
     isError,
   } = useProductQuery();
+  const { mutate, reset } = useProductMutation({
+    action: "DELETE",
+  });
+
+  useEffect(() => {
+    reset();
+  });
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
-  console.log(products);
   return (
     <div className="  px-4 sm:px-8">
       <div className="py-8">
@@ -166,7 +173,11 @@ const ProductsList = () => {
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {product.category}
+                            {product.category.map(
+                              (item) => {
+                                return item.name;
+                              }
+                            )}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -225,8 +236,8 @@ const ProductsList = () => {
                               <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
                             </svg>
                           </Link>
-                          <Link
-                            to={`delete/${product._id}`}
+                          <button
+                            onClick={() => mutate(product)}
                             className={styles.Btn}
                           >
                             Delete
@@ -236,7 +247,7 @@ const ProductsList = () => {
                             >
                               <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
                             </svg>
-                          </Link>
+                          </button>
                         </td>
                       </tr>
                     );

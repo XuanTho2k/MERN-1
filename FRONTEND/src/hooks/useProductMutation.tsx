@@ -5,21 +5,25 @@ import {
   deleteProductById,
   editProductById,
 } from "@/services/product";
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { Navigate } from "react-router-dom";
 type useProductMutationProps = {
   action: "EDIT" | "DELETE" | "CREATE";
 };
 const useProductMutation = ({
   action,
 }: useProductMutationProps) => {
+  const queryClient = useQueryClient();
+
   const form = useForm();
   const { mutate, ...rest } = useMutation({
     mutationFn: async (product: IProduct) => {
-      console.log("fdsfsd");
       switch (action) {
         case "EDIT":
-          console.log("hello");
           await editProductById(product);
           break;
         case "DELETE":
@@ -33,9 +37,13 @@ const useProductMutation = ({
           return null;
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["PRODUCTS_KEY"],
+      });
+    },
   });
   const onSubmit = (product: IProdut) => {
-    console.log("helo");
     mutate(product);
   };
   return { form, mutate, onSubmit, ...rest };

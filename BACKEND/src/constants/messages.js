@@ -1,4 +1,4 @@
-export const errorMessages = {
+export const errorMessages = Object.freeze({
   INVALID_TOKEN: "Invalid token",
   INVALID_EMAIL: "Invalid email",
   INVALID_PASSWORD: "Invalid password",
@@ -8,9 +8,9 @@ export const errorMessages = {
   SLUG_EXISTS: "Slug already exists",
   NOT_FOUND: "Not found",
   ERROR_SERVER: "Internal server error",
-};
+});
 
-export const successMessages = {
+export const successMessages = Object.freeze({
   CREATE_SUCCESS: "Successfully created",
   READ_SUCCESS: "Successfully retrieved",
   UPDATE_SUCCESS: "Successfully updated",
@@ -18,4 +18,11 @@ export const successMessages = {
   LOGIN_SUCCESS: "Successfully logged in",
   FOUND_SUCCESS: "Successfully found",
   SOFT_DELETE_SUCCESS: "Successfully soft deleted",
-};
+  ADD_TO_CART_SUCCESS: "Successfully added to cart",
+  INCREASE_QUANTITY_SUCCESS:
+    "Successfully increased quantity",
+  DECREASE_QUANTITY_SUCCESS:
+    "Successfully decreased quantity",
+  REMOVE_FROM_CART_SUCCESS:
+    "Successfully removed from cart",
+});

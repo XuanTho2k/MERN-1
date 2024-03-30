@@ -16,6 +16,7 @@ export const getProductById = async (
   id?: number | string
 ): Promise<IProduct | null> => {
   try {
+    console.log("product by id");
     const res = await instance.get(`/products/${id}`);
     return res.data.product;
   } catch (error) {
@@ -23,6 +24,18 @@ export const getProductById = async (
   }
 };
 
+export const getProductByCategoryId = async (
+  id: string | number
+) => {
+  try {
+    const res = await instance.get(
+      `/products/category/${id}`
+    );
+    return res.data.products;
+  } catch (err) {
+    return [];
+  }
+};
 export const createProduct = async (product: IProduct) => {
   try {
     const data = await instance.post("/products", product);

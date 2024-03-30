@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import useProductsCategory from "@/hooks/useProductsCategory";
+import { IProduct } from "@/interfaces/product";
+import { CategoryContext } from "@/pages/Shop/details";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
-const RelatedProducts = () => {
-  const a = Array.from({ length: 8 }, (_, i) => i + 1);
-
+const RelatedProducts = ({ products }) => {
   const [divHeight, setDivHeight] = useState("448px");
   const [showMore, setShowMore] = useState(true);
 
@@ -11,7 +12,6 @@ const RelatedProducts = () => {
     setDivHeight(showMore ? "100%" : "448px");
     setShowMore(!showMore);
   };
-
   return (
     <div className="max-w-[1440px] mx-auto flex flex-col gap-[40px] justify-center items-center border-t-2 pt-[40px]">
       <span className="text-[36px]">Related Products</span>
@@ -24,61 +24,71 @@ const RelatedProducts = () => {
             <div className="section-body">
               <div className="product-list">
                 {/*End .product-item*/}
-                {a.map(() => {
-                  return (
-                    <div key="" className="product-item">
-                      <div className="product-image">
-                        <img
-                          src=""
-                          className="product__thumbnail"
-                        />
-                        <span className="product-sale">
-                          ""
-                        </span>
-                      </div>
-                      <div className="product-info">
-                        <h3 className="product__name">
-                          <a className="product__link">
-                            ""
+                {products?.map(
+                  (item: IProduct, idx: number) => {
+                    return (
+                      <div
+                        key={idx}
+                        className="product-item"
+                      >
+                        <div className="product-image">
+                          <img
+                            src={item.thumbnail}
+                            className="product__thumbnail"
+                          />
+                          <span className="product-sale">
+                            {item.discountPercentage}
+                          </span>
+                        </div>
+                        <div className="product-info">
+                          <h3 className="product__name">
+                            <a className="product__link">
+                              {item.title}
+                            </a>
+                          </h3>
+                          <a className="product__category">
+                            {item.category.map((cate) => {
+                              return cate.name;
+                            })}
                           </a>
-                        </h3>
-                        <a className="product__category">
-                          ""
-                        </a>
-                        <div className="product-price">
-                          <span className="product-price__new">
-                            ""
-                          </span>
-                          <span className="product-price__old">
-                            ''
-                          </span>
+                          <div className="product-price">
+                            <span className="product-price__new">
+                              {item.price -
+                                (item.price *
+                                  item.discountPercentage) /
+                                  100}
+                            </span>
+                            <span className="product-price__old">
+                              {item.price}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="product-actions">
+                          <Link
+                            to={`/product/${item._id}`}
+                            className="btn  product-action__quickview"
+                          >
+                            View Details
+                          </Link>
+                          <button className="btn product-action__addtocart">
+                            Add To Cart
+                          </button>
+                          <div className="product-actions-more">
+                            <span className="product-action__share">
+                              Share
+                            </span>
+                            <span className="product-action__compare">
+                              Compare
+                            </span>
+                            <span className="product-action__like">
+                              Like
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <div className="product-actions">
-                        <Link
-                          to=""
-                          className="btn  product-action__quickview"
-                        >
-                          Quick View
-                        </Link>
-                        <button className="btn product-action__addtocart">
-                          Add To Cart
-                        </button>
-                        <div className="product-actions-more">
-                          <span className="product-action__share">
-                            Share
-                          </span>
-                          <span className="product-action__compare">
-                            Compare
-                          </span>
-                          <span className="product-action__like">
-                            Like
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
               </div>
             </div>
           </div>
