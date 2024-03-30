@@ -4,13 +4,13 @@ import {
 } from "@/services/product";
 import { useQuery } from "@tanstack/react-query";
 
-export const useProductQuery = (id?: string | number) => {
+export const useProductQuery = (options) => {
   const { data, ...rest } = useQuery({
-    queryKey: ["PRODUCTS_KEY", id],
+    queryKey: ["PRODUCTS_KEY", options],
     queryFn: async () => {
-      return id
-        ? await getProductById(id)
-        : await getAllProducts();
+      return options.id
+        ? await getProductById(options.id)
+        : await getAllProducts(options);
     },
   });
   return { data, ...rest };

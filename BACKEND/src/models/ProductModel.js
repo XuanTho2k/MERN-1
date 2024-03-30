@@ -1,5 +1,6 @@
-import { ref } from "joi";
 import mongoose, { Schema } from "mongoose";
+
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const productSchema = new Schema({
   title: {
@@ -51,5 +52,7 @@ const productSchema = new Schema({
     default: false,
   },
 });
+
+productSchema.plugin(mongoosePaginate);
 
 export default mongoose.model("Product", productSchema);

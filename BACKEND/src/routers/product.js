@@ -29,4 +29,9 @@ productRouter.delete(
   ProductController.hardRemoveProductById
 );
 
+productRouter.get(
+  "/pagi/nate",
+  ProductController.getAllPaginate
+);
+
 export default productRouter;

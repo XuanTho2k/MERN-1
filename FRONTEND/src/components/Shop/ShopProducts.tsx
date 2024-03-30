@@ -1,23 +1,51 @@
-import instance from "@/configs/axios";
 import useCategoryQuery from "@/hooks/useCategoryQuery";
 import useProductsCategory from "@/hooks/useProductsCategory";
 import { ICategory } from "@/interfaces/category";
 import { IProduct } from "@/interfaces/product";
 import { CategoryContext } from "@/pages/Shop/shop";
-import CategoryService from "@/services/category";
-import { getAllProducts } from "@/services/product";
-import axios from "axios";
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import Pagination from "../Pagination";
+import {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const ShopProducts = () => {
-  const [category] = useContext(CategoryContext);
-  console.log(category);
-  const { data, isLoading, isError } =
-    useProductsCategory(category);
+  //
+  const [params] = useSearchParams();
+  const page = params.get("page");
 
+  const [limit, setLimit] = useState(8);
+  const [currentPage, setCrurentPage] = useState(page || 1);
+
+  //data category
+  const [category] = useContext(CategoryContext);
   const cate = useCategoryQuery(category);
 
+  //data product
+  const { data, isLoading, isError, refetch } =
+    useProductsCategory(
+      category || { _page: page, _limit: limit }
+    );
+
+  useEffect(() => {
+    if (page && +page !== currentPage) {
+      setCrurentPage(+page);
+    }
+  }, [page, currentPage]);
+
+  //goi lai api voi limit moi va trang dau
+  const handleLimitChange = (e: ChangeEvent<any>) => {
+    setLimit(e.target.value);
+    refetch();
+  };
+
+  const { product, pagination } = data || {
+    product: [],
+    pagination: {},
+  };
   if (isLoading) return <div>Loading ....</div>;
   if (isError) return <div>isError</div>;
   return (
@@ -32,82 +60,71 @@ const ShopProducts = () => {
           <div className="section-body">
             <div className="product-list">
               {/*End .product-item*/}
-              {data.map((item: IProduct, idx: number) => {
-                return (
-                  <div key={idx} className="product-item">
-                    <div className="product-image">
-                      <img
-                        src={item.thumbnail}
-                        className="product__thumbnail"
-                      />
-                      <span className="product-sale">
-                        ""
-                      </span>
-                    </div>
-                    <div className="product-info">
-                      <h3 className="product__name">
-                        <a className="product__link">
-                          {item.title}
+              {product.map(
+                (item: IProduct, idx: number) => {
+                  return (
+                    <div key={idx} className="product-item">
+                      <div className="product-image">
+                        <img
+                          src={item.thumbnail}
+                          className="product__thumbnail"
+                        />
+                        <span className="product-sale">
+                          {item.discountPercentage} %
+                        </span>
+                      </div>
+                      <div className="product-info">
+                        <h3 className="product__name">
+                          <a className="product__link">
+                            {item.title}
+                          </a>
+                        </h3>
+                        <a className="product__category">
+                          {item.category.map(
+                            (cate: ICategory) => {
+                              return cate.name;
+                            }
+                          )}
                         </a>
-                      </h3>
-                      <a className="product__category">
-                        {item.category.map(
-                          (cate: ICategory) => {
-                            return cate.name;
-                          }
-                        )}
-                      </a>
-                      <div className="product-price">
-                        <span className="product-price__new">
-                          ""
-                        </span>
-                        <span className="product-price__old">
-                          ''
-                        </span>
+                        <div className="product-price">
+                          <span className="product-price__new">
+                            {item.price} $
+                          </span>
+                          <span className="product-price__old">
+                            ''
+                          </span>
+                        </div>
+                      </div>
+                      <div className="product-actions">
+                        <Link
+                          to={`/product/${item._id}`}
+                          className="btn  product-action__quickview"
+                        >
+                          View Details
+                        </Link>
+                        <button className="btn product-action__addtocart">
+                          Add To Cart
+                        </button>
+                        <div className="product-actions-more">
+                          <span className="product-action__share">
+                            Share
+                          </span>
+                          <span className="product-action__compare">
+                            Compare
+                          </span>
+                          <span className="product-action__like">
+                            Like
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div className="product-actions">
-                      <Link
-                        to={`/product/${item._id}`}
-                        className="btn  product-action__quickview"
-                      >
-                        View Details
-                      </Link>
-                      <button className="btn product-action__addtocart">
-                        Add To Cart
-                      </button>
-                      <div className="product-actions-more">
-                        <span className="product-action__share">
-                          Share
-                        </span>
-                        <span className="product-action__compare">
-                          Compare
-                        </span>
-                        <span className="product-action__like">
-                          Like
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex flex-row gap-[30px] justify-center items-center mt-[80px]">
-              <span className="bg-[#F9F1E7] px-[2rem] text-[20px] py-[1rem] hover:bg-[#B88E2F] hover:text-white  border rounded-[1rem] duration-300">
-                1
-              </span>
-              <span className="bg-[#F9F1E7] px-[2rem] text-[20px] py-[1rem] hover:bg-[#B88E2F] hover:text-white  border rounded-[1rem] duration-300">
-                2
-              </span>
-              <span className="bg-[#F9F1E7] px-[2rem] text-[20px] py-[1rem] hover:bg-[#B88E2F] hover:text-white  border rounded-[1rem] duration-300">
-                3
-              </span>
-              <span className="bg-[#F9F1E7] px-[2rem] text-[20px] py-[1rem] hover:bg-[#B88E2F] hover:text-white  border rounded-[1rem] duration-300">
-                Next
-              </span>
+                  );
+                }
+              )}
             </div>
           </div>
         </div>
+        <Pagination totalPages={pagination.totalPage} />
       </section>
     </div>
   );

@@ -1,12 +1,15 @@
 import { ProductDetails } from "@/components/Shop/ProductDetails";
 import instance from "src/configs/axios";
 import { IProduct } from "@/interfaces/product";
-export const getAllProducts = async (): Promise<
-  IProduct[]
-> => {
+export const getAllProducts = async (
+  params
+): Promise<IProduct[]> => {
   try {
-    const res = await instance.get("/products");
-    return res.data.products;
+    const { data } = await instance.get("/products", {
+      params,
+    });
+
+    return data;
   } catch (error) {
     return [];
   }
@@ -28,10 +31,10 @@ export const getProductByCategoryId = async (
   id: string | number
 ) => {
   try {
-    const res = await instance.get(
+    const { data } = await instance.get(
       `/products/category/${id}`
     );
-    return res.data.products;
+    return data;
   } catch (err) {
     return [];
   }

@@ -2,6 +2,7 @@ import instance from "@/configs/axios";
 class CartService {
   static getByUserId = async (userId: string | number) => {
     try {
+      console.log(userId);
       const res = await instance.get(`/carts/${userId}`);
       return res;
     } catch (err) {

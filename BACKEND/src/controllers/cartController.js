@@ -7,22 +7,35 @@ import Cart from "../models/CartMode";
 import StatusCodes, { NOT_FOUND } from "http-status-codes";
 
 class CartController {
+  static async getAll(req, res, next) {
+    try {
+      const cart = await Cart.find();
+      return res.status(200).json({
+        message: successMessages.READ_SUCCESS,
+        cart,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   static async getByUserId(req, res, next) {
     const { userId } = req.params;
+
     try {
       const cart = await Cart.findOne({ userId }).populate(
         "products.productId"
       );
+      console.log(cart);
       const cartData = {
         products: cart.products.map((item) => ({
-          productId: item.productId._id,
+          _id: item.productId._id,
           title: item.productId.title,
           price: item.productId.price,
           quantity: item.quantity,
           thumbnail: item.productId.thumbnail,
-          _id: item.productId._id,
         })),
       };
+      console.log(cartData);
       return res.status(200).json({
         message: successMessages.READ_SUCCESS,
         products: cartData.products,

@@ -40,14 +40,14 @@ const ProductList = (rating?: ProductListProp) => {
   });
 
   //lay products tu api
-  const {
-    data: products,
-    isLoading,
-    isError,
-  } = useProductQuery();
+  const { data, isLoading, isError } = useProductQuery({
+    _page: 1,
+    _limit: 4,
+  });
+  console.log(data);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
-  const filterProducts = products?.filter(
+  const filterProducts = data?.product?.filter(
     (item: IProduct) => {
       return item.rating > (rating?.ratingProp ?? 0);
     }

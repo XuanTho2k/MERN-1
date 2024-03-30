@@ -21,6 +21,7 @@ const useCart = () => {
       const { data } = await CartService.getByUserId(
         userId
       );
+      console.log(data);
       return data;
     },
   });

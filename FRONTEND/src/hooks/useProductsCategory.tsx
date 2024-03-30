@@ -4,15 +4,13 @@ import {
 } from "@/services/product";
 import { useQuery } from "@tanstack/react-query";
 
-const useProductsCategory = (id?: string | number) => {
-  //check id
-  console.log(id);
+const useProductsCategory = (options) => {
   const { data, ...rest } = useQuery({
-    queryKey: ["PRODUCT_CATEGORY", id],
+    queryKey: ["PRODUCT_CATEGORY", options],
     queryFn: async () => {
-      return id === undefined
-        ? getAllProducts()
-        : getProductByCategoryId(id);
+      return options.id
+        ? getProductByCategoryId(options.id)
+        : getAllProducts(options);
     },
   });
   return { data, ...rest };

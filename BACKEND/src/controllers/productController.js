@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   addProductSchema,
   updateProductSchema,
@@ -12,7 +13,6 @@ import {
   successMessages,
 } from "../constants/messages";
 import { validAuth } from "../utils/validAuth";
-import Category from "../models/CategoryModel";
 class ProductController {
   static addProduct = async (req, res, next) => {
     try {
@@ -35,18 +35,115 @@ class ProductController {
       next(err);
     }
   };
+  static getAllPaginate = async (req, res, next) => {
+    try {
+      const {
+        _page = 1,
+        _limit = 10,
+        _sort = "createAt",
+        _order = "asc",
+        _expand,
+      } = req.query;
+      const options = {
+        page: _page,
+        limit: _limit,
+        sort: { [_sort]: _order === "desc" ? -1 : 1 },
+      };
+      console.log(req.query);
 
+      const populateOptions = _expand
+        ? []
+        : [{ path: "category", select: "name" }];
+
+      const results = await Product.paginate(
+        { categoryId: null },
+        { ...options, populate: populateOptions }
+      );
+
+      if (results.docs.length === 0)
+        throw new Error("No products found");
+
+      const {
+        docs,
+        totalDocs,
+        totalPages,
+        page,
+        pagingCounter,
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
+        nextPage,
+      } = results;
+
+      const products = {
+        products: results.docs,
+        pagination: {
+          currentPage: page,
+          totalPage: totalPages,
+          totalItems: totalDocs,
+          hasNextPage: hasNextPage,
+          hasPrevPage: hasPrevPage,
+          prevPage: prevPage,
+        },
+      };
+
+      return res.status(200).json({
+        message: successMessages.READ_SUCCESS,
+        products,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
   static getProducts = async (req, res, next) => {
     try {
-      const products = await Product.find().populate(
-        "category"
+      const {
+        _page = 1,
+        _limit = 4,
+        _sort = "createAt",
+        _order = "asc",
+        _expand,
+      } = req.query;
+      const options = {
+        page: _page,
+        limit: _limit,
+        sort: { [_sort]: _order === "desc" ? -1 : 1 },
+      };
+      const populateOptions = _expand
+        ? []
+        : [{ path: "category", select: "name" }];
+      const results = await Product.paginate(
+        {
+          categoryId: null,
+        },
+        { ...options, populate: populateOptions }
       );
-      if (products) {
-        return res.status(OK).json({
-          message: successMessages.READ_SUCCESS,
-          products,
-        });
-      }
+
+      if (results.docs.length === 0)
+        throw new Error("No products found");
+      const {
+        docs,
+        totalDocs,
+        totalPages,
+        page,
+        pagingCounter,
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
+        nextPage,
+      } = results;
+      return res.status(200).json({
+        message: successMessages.READ_SUCCESS,
+        product: docs,
+        pagination: {
+          currentPage: page,
+          totalPage: totalPages,
+          totalItems: totalDocs,
+          hasNextPage: hasNextPage,
+          hasPrevPage: hasPrevPage,
+          prevPage: prevPage,
+        },
+      });
     } catch (error) {
       next(err);
     }
@@ -67,12 +164,12 @@ class ProductController {
   };
   static getByCategoryId = async (req, res, next) => {
     try {
-      const products = await Product.find({
+      const product = await Product.find({
         category: req.params.id,
       }).populate("category");
       return res.status(StatusCodes.OK).json({
         message: successMessages.READ_SUCCESS,
-        products,
+        product,
       });
     } catch (err) {
       next(err);
@@ -94,7 +191,10 @@ class ProductController {
         req.body,
         { new: true }
       );
-      return res.status(OK).json({ product });
+      return res.status(OK).json({
+        message: successMessages.UPDATE_SUCCESS,
+        product,
+      });
     } catch (err) {
       next(err);
     }

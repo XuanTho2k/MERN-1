@@ -4,6 +4,7 @@ import CartList from "@/components/Shop/CartList";
 import React from "react";
 
 const CartPage = () => {
+  // loading
   return (
     <div>
       <Header />

@@ -9,7 +9,6 @@ import {
 const useCategoryQuery = (id?: string | number) => {
   const queryClient = useQueryClient();
 
-  console.log(id);
   const { data, ...rest } = useQuery({
     queryKey: ["CATEGORY_KEY", id],
     queryFn: async () => {

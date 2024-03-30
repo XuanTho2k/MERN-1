@@ -2,6 +2,7 @@ import { Router } from "express";
 import CartController from "../controllers/cartController";
 
 const cartRouter = Router();
+cartRouter.get("/", CartController.getAll);
 cartRouter.get("/:userId", CartController.getByUserId);
 cartRouter.post("/add-to-cart", CartController.addItem);
 cartRouter.post(
