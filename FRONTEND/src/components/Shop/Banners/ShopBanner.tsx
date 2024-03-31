@@ -1,15 +1,20 @@
-import React, { useContext } from "react";
+import React, { ChangeEvent, useContext } from "react";
 import styles from "./ShopBanner.module.css";
 import { useQuery } from "@tanstack/react-query";
 import CategoryService from "@/services/category";
-import { CategoryContext } from "@/pages/Shop/shop";
+import {
+  CategoryContext,
+  LimitContext,
+  PaginateContext,
+} from "@/pages/Shop/shop";
 import { ICategory } from "@/interfaces/category";
 import useCategoryQuery from "@/hooks/useCategoryQuery";
 
 const ShopBanner = () => {
   const [category, setCategory] =
     useContext(CategoryContext);
-  const { data: dataCategories } = useCategoryQuery();
+  const { data: dataCategories, refetch } =
+    useCategoryQuery();
   const [filter, setFilter] = React.useState(true);
   const Btn_filter = () => {
     setFilter(!filter);
@@ -17,6 +22,16 @@ const ShopBanner = () => {
 
   const handleCategory = (id: string | number) => {
     setCategory(id);
+  };
+
+  const [paginate, setPaginate] =
+    useContext(PaginateContext);
+
+  const [limit, setLimit] = useContext(LimitContext);
+  //goi lai api voi limit moi va trang dau
+  const handleLimitChange = (e: ChangeEvent<any>) => {
+    setLimit(e.target.value === "" ? 1 : e.target.value);
+    refetch();
   };
   return (
     <div>
@@ -150,12 +165,18 @@ const ShopBanner = () => {
               alt=""
             />
             <span className=" ">
-              Showing 1-16 of 32 results
+              Showing 1-{limit} of {paginate.totalItems}{" "}
+              results
             </span>
             <div className="flex flex-row gap-[15px] ml-[520px]">
               <span>Show</span>
               <span className="bg-white opacity-50 ">
-                16
+                <input
+                  type="text"
+                  value={limit}
+                  className="w-[20px] p-1"
+                  onChange={handleLimitChange}
+                />
               </span>
               <span>Short by</span>
               <span className="bg-white opacity-50 px-">

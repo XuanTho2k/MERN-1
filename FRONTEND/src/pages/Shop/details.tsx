@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 export const CategoryContext = createContext([] as any);
 const DetailsProductPage: React.FC = () => {
   const { id } = useParams();
-  const product = useProductQuery(id);
+  const product = useProductQuery({ id: id });
   const relatedProduct = useQuery({
     queryKey: ["RELATED_PRODUCT"],
     queryFn: async () => {
@@ -22,6 +22,7 @@ const DetailsProductPage: React.FC = () => {
       return data;
     },
   });
+  console.log(relatedProduct);
   return (
     <>
       <Header />

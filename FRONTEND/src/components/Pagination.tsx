@@ -18,7 +18,7 @@ const Pagination: React.FC<PaginationProps> = ({
             to={`?page=${i + 1}`}
             className={`bg-[#F9F1E7] cursor-pointer px-[2rem] text-[20px] py-[1rem] hover:bg-[#B88E2F] hover:text-white  border rounded-[1rem] duration-300 ${
               parseInt(page || "1") === i + 1
-                ? "bg-[#B88E2f] text-white"
+                ? "bg-[#B88E2F] text-white"
                 : ""
             }`}
           >

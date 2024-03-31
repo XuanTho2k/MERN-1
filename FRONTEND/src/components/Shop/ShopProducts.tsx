@@ -2,7 +2,11 @@ import useCategoryQuery from "@/hooks/useCategoryQuery";
 import useProductsCategory from "@/hooks/useProductsCategory";
 import { ICategory } from "@/interfaces/category";
 import { IProduct } from "@/interfaces/product";
-import { CategoryContext } from "@/pages/Shop/shop";
+import {
+  CategoryContext,
+  LimitContext,
+  PaginateContext,
+} from "@/pages/Shop/shop";
 import { Link, useSearchParams } from "react-router-dom";
 import Pagination from "../Pagination";
 import {
@@ -11,24 +15,29 @@ import {
   useEffect,
   useState,
 } from "react";
+import { ref } from "joi";
 
 const ShopProducts = () => {
   //
   const [params] = useSearchParams();
   const page = params.get("page");
 
-  const [limit, setLimit] = useState(8);
+  const [limit, setLimit] = useContext(LimitContext);
+  console.log(limit);
   const [currentPage, setCrurentPage] = useState(page || 1);
 
   //data category
   const [category] = useContext(CategoryContext);
   const cate = useCategoryQuery(category);
+  console.log(category);
 
   //data product
   const { data, isLoading, isError, refetch } =
-    useProductsCategory(
-      category || { _page: page, _limit: limit }
-    );
+    useProductsCategory({
+      _page: page,
+      _limit: limit,
+      id: category,
+    });
 
   useEffect(() => {
     if (page && +page !== currentPage) {
@@ -36,16 +45,17 @@ const ShopProducts = () => {
     }
   }, [page, currentPage]);
 
-  //goi lai api voi limit moi va trang dau
-  const handleLimitChange = (e: ChangeEvent<any>) => {
-    setLimit(e.target.value);
-    refetch();
-  };
-
   const { product, pagination } = data || {
     product: [],
     pagination: {},
   };
+
+  const [paginate, setPaginate] =
+    useContext(PaginateContext);
+  useEffect(() => {
+    setPaginate(pagination);
+    refetch();
+  }, [pagination, limit]);
   if (isLoading) return <div>Loading ....</div>;
   if (isError) return <div>isError</div>;
   return (
@@ -124,7 +134,7 @@ const ShopProducts = () => {
             </div>
           </div>
         </div>
-        <Pagination totalPages={pagination.totalPage} />
+        <Pagination totalPages={pagination?.totalPage} />
       </section>
     </div>
   );

@@ -44,7 +44,6 @@ const ProductList = (rating?: ProductListProp) => {
     _page: 1,
     _limit: 4,
   });
-  console.log(data);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
   const filterProducts = data?.product?.filter(
