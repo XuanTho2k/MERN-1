@@ -1,10 +1,43 @@
+import useCart from "@/hooks/useCart";
+import { useLocalStorage } from "@/hooks/useStorage";
+import { IProduct } from "@/interfaces/product";
+import OrderServices from "@/services/oder";
+import { useMutation } from "@tanstack/react-query";
 import React from "react";
+import { useForm } from "react-hook-form";
 
 const BillingDetails = () => {
+  const { mutate } = useMutation({
+    mutationFn: async (order: {
+      userId: string;
+      items: [];
+      totalPrice: number;
+      customerInfo: object;
+    }) => {
+      console.log(order);
+      const { data } = OrderServices.create(order);
+      return data;
+    },
+    onSuccess: () => {
+      alert("Success Order");
+    },
+  });
+  const [user] = useLocalStorage("user", {});
+  const userId = user?.user?._id;
+  const { data, calculateTotal } = useCart();
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (formData) => {
+    mutate({
+      userId,
+      items: data?.products,
+      totalPrice: calculateTotal(),
+      customerInfo: formData,
+    });
+  };
   return (
     <form
       className="max-w-[1440px]  ml-[270px] mt-[80px] mb-[100px]"
-      action=""
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex flex-row gap-[80px]">
         <div className="flex flex-col gap-[20px]">
@@ -18,7 +51,7 @@ const BillingDetails = () => {
                 className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
                 type="text"
                 id="fname"
-                name="firstname"
+                {...register("fname")}
                 placeholder="Your name.."
               />
             </div>
@@ -28,7 +61,7 @@ const BillingDetails = () => {
                 className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
                 type="text"
                 id="lname"
-                name="lastname"
+                {...register("lname")}
                 placeholder="Your name.."
               />
             </div>
@@ -42,7 +75,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="companyname"
-              name="companyname"
+              {...register("company")}
             />
           </div>
           <div>
@@ -53,7 +86,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="country"
-              name="country"
+              {...register("country")}
             />
           </div>
           <div>
@@ -62,7 +95,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="address"
-              name="address"
+              {...register("address")}
             />
           </div>
           <div>
@@ -71,7 +104,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="town"
-              name="town"
+              {...register("city")}
             />
           </div>
           <div>
@@ -80,7 +113,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="province"
-              name="province"
+              {...register("province")}
               placeholder="Your province.."
             />
           </div>
@@ -90,7 +123,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="zipcode"
-              name="zipcode"
+              {...register("zipcode")}
             />
           </div>
           <div>
@@ -99,7 +132,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="phone"
-              name="phone"
+              {...register("phone")}
             />
           </div>
           <div>
@@ -108,7 +141,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="email"
-              name="email"
+              {...register("email")}
             />
           </div>
           <div>
@@ -116,7 +149,7 @@ const BillingDetails = () => {
               className="w-full mt-[20px] border border-[#9f9f9f] p-3 rounded-xl"
               type="text"
               id="additional"
-              name="additional"
+              {...register("additionalInfo")}
               placeholder="Additional information about your order"
             />
           </div>
@@ -125,19 +158,33 @@ const BillingDetails = () => {
           <div className="flex flex-row justify-between border-b-2 w-[533px] pb-[20px] border-red mt-[40px] ">
             <div className="flex flex-col gap-[20px]">
               <span className="text-[24px]">Product</span>
-              <span className="text-[#9f9f9f]">
-                Iphone{" "}
-                <span className="text-black">x 1</span>
-              </span>
+
+              {data?.products.map((item, idx: number) => {
+                return (
+                  <span className="text-[#9f9f9f]">
+                    {item.title}
+                    <span className="text-black">
+                      x {item.quantity}
+                    </span>
+                  </span>
+                );
+              })}
               <span>Subtotal</span>
               <span>Total</span>
             </div>
             <div className="flex flex-col gap-[20px] ">
               <span className="text-[24px]">Subtotal</span>
-              <span>25.000.000d</span>
-              <span>25.000.000d</span>
+              {data?.products.map((item) => {
+                return (
+                  <span>
+                    {" "}
+                    {item.price * item.quantity}
+                    {" $ "}
+                  </span>
+                );
+              })}
               <span className="text-[24px] text-[#B88E2F]">
-                25.000.000d
+                {calculateTotal()} $
               </span>
             </div>
           </div>

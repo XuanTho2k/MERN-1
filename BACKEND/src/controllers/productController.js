@@ -17,12 +17,12 @@ class ProductController {
   static addProduct = async (req, res, next) => {
     try {
       //Check if the input is valid
-      const error = validAuth(
-        req.body,
-        addProductSchema,
-        res
-      );
-      if (error) return;
+      // const error = validAuth(
+      //   req.body,
+      //   addProductSchema,
+      //   res
+      // );
+      // if (error) return;
 
       const product = await Product.create(req.body);
       if (product) {
@@ -179,13 +179,13 @@ class ProductController {
   static editProductById = async (req, res, next) => {
     try {
       //Check if the input is valid
-      const error = validAuth(
-        req.body,
-        updateProductSchema,
-        res
-      );
-      if (error) return;
-
+      // const error = validAuth(
+      //   req.body,
+      //   updateProductSchema,
+      //   res
+      // );
+      // if (error) return;
+      console.log("object");
       const product = await Product.findByIdAndUpdate(
         req.params.id,
         req.body,

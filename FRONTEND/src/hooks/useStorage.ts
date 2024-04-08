@@ -29,7 +29,7 @@ export function useLocalStorage(key, defaultValue) {
   return useStorage(key, defaultValue, window.localStorage);
 }
 
-export function useSesstionStorage(key, defaultValue) {
+export function useSessionStorage(key, defaultValue) {
   return useStorage(
     key,
     defaultValue,

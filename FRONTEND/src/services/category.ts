@@ -4,7 +4,6 @@ class CategoryService {
   static getAll = async () => {
     try {
       const { data } = await instance.get("/category");
-      console.log(data.categories);
       return data.categories;
     } catch (err) {
       return [];

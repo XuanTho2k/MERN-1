@@ -8,6 +8,8 @@ export const errorMessages = Object.freeze({
   SLUG_EXISTS: "Slug already exists",
   NOT_FOUND: "Not found",
   ERROR_SERVER: "Internal server error",
+  PERMISSION_DENIED: "Permission denied",
+  INVALID_BODY: "Invalid body",
 });
 
 export const successMessages = Object.freeze({

@@ -21,7 +21,6 @@ const useCart = () => {
       const { data } = await CartService.getByUserId(
         userId
       );
-      console.log(data);
       return data;
     },
   });
@@ -61,7 +60,6 @@ const useCart = () => {
           });
           break;
         case "REMOVE":
-          console.log(userId, productId);
           await CartService.removeItem({
             userId,
             productId,

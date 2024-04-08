@@ -1,5 +1,7 @@
 import express from "express";
 import ProductController from "../controllers/productController";
+import { validBodyRequest } from "../middleware/checkValidReqBody";
+import { addProductSchema } from "../validations/product";
 
 const productRouter = express.Router();
 
@@ -13,6 +15,17 @@ productRouter.get(
   "/:categoryId/related/:id",
   ProductController.related
 );
+productRouter.delete(
+  "/delete/:id",
+  ProductController.hardRemoveProductById
+);
+
+productRouter.get(
+  "/pagi/nate",
+  ProductController.getAllPaginate
+);
+
+//productRouter.use(validBodyRequest(addProductSchema)); //middle ware
 productRouter.post("/", ProductController.addProduct);
 
 productRouter.put(
@@ -22,16 +35,6 @@ productRouter.put(
 productRouter.put(
   "/hide/:id",
   ProductController.softRemoveProductById
-);
-
-productRouter.delete(
-  "/delete/:id",
-  ProductController.hardRemoveProductById
-);
-
-productRouter.get(
-  "/pagi/nate",
-  ProductController.getAllPaginate
 );
 
 export default productRouter;

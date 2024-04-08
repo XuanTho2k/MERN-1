@@ -75,7 +75,7 @@ const ShopBanner = () => {
                     </p>
                     <ul className="flex flex-wrap gap-[10px] max-w-[170px]">
                       {dataCategories?.map(
-                        (item: ICategory, idx) => {
+                        (item: ICategory, idx: number) => {
                           return (
                             <li key={idx}>
                               <button
@@ -165,7 +165,7 @@ const ShopBanner = () => {
               alt=""
             />
             <span className=" ">
-              Showing 1-{limit} of {paginate.totalItems}{" "}
+              Showing 1-{limit} of {paginate?.totalItems}{" "}
               results
             </span>
             <div className="flex flex-row gap-[15px] ml-[520px]">

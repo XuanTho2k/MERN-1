@@ -7,6 +7,7 @@ import {
   Service,
   Shop,
 } from "@/components/Shop";
+import { Toaster } from "@/components/ui/sonner";
 
 const HomePage = () => {
   return (
@@ -19,6 +20,7 @@ const HomePage = () => {
         <div className="container">
           <hr />
         </div>
+        <Toaster expand={true} />
         {/*End .news*/}
         <Shop />
         {/*End .shop*/}

@@ -21,7 +21,7 @@ import {
 import { hashPassword } from "../utils/hashPassword";
 class AuthController {
   static userSignup = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
 
     try {
       //check if the input is valid
@@ -36,6 +36,9 @@ class AuthController {
           .json({ message: errorMessages.EMAIL_EXISTS });
       }
 
+      if (password !== confirmPassword) {
+        throw new Error("Password does not match");
+      }
       //hash the password
       const hashPw = await hashPassword(password);
 
@@ -87,9 +90,13 @@ class AuthController {
       }
 
       //Generate token
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-        expiresIn: "1h",
-      });
+      const token = jwt.sign(
+        { id: user._id, role: user.role },
+        JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
       return res.status(StatusCodes.OK).json({
         message: successMessages.LOGIN_SUCCESS,
         token,

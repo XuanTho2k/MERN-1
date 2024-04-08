@@ -82,18 +82,14 @@ export const updateProductSchema = Joi.object({
     "string.max":
       "Description should have a maximum length of {#limit}",
   }),
-  category: Joi.string()
-    .min(3)
-    .max(30)
-
-    .messages({
-      "string.base": "Category should be a type of text",
-      "string.empty": "Category should not be empty",
-      "string.min":
-        "Category should have a minimum length of {#limit}",
-      "string.max":
-        "Category should have a maximum length of {#limit}",
-    }),
+  category: Joi.string().min(3).max(30).messages({
+    "string.base": "Category should be a type of text",
+    "string.empty": "Category should not be empty",
+    "string.min":
+      "Category should have a minimum length of {#limit}",
+    "string.max":
+      "Category should have a maximum length of {#limit}",
+  }),
   stock: Joi.number().messages({
     "number.base": "Stock should be a type of number",
     "number.empty": "Stock should not be empty",

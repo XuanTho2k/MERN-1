@@ -1,4 +1,6 @@
+import useCategoryQuery from "@/hooks/useCategoryQuery";
 import useProductMutation from "@/hooks/useProductMutation";
+import { ICategory } from "@/interfaces/category";
 import React from "react";
 
 const AddForm = () => {
@@ -6,6 +8,8 @@ const AddForm = () => {
     useProductMutation({
       action: "CREATE",
     });
+
+  const category = useCategoryQuery();
 
   if (isError) return <div>Error</div>;
   return (
@@ -111,9 +115,19 @@ const AddForm = () => {
                     autoComplete="country-name"
                     className="block w-full rounded-md border-0 py-1.5 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>Mexico</option>
+                    {category?.data.map(
+                      (item: ICategory, idx: number) => {
+                        return (
+                          <option
+                            key={idx}
+                            value={item._id}
+                          >
+                            {" "}
+                            {item.name}{" "}
+                          </option>
+                        );
+                      }
+                    )}
                   </select>
                 </div>
               </div>

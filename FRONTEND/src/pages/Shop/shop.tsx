@@ -1,6 +1,7 @@
 import { Footer, Header, Service } from "@/components/Shop";
 import ShopBanner from "@/components/Shop/Banners/ShopBanner";
 import ShopProducts from "@/components/Shop/ShopProducts";
+import { Toaster } from "@/components/ui/sonner";
 import { createContext, useState } from "react";
 
 export const CategoryContext = createContext();
@@ -25,6 +26,7 @@ const ShopPage = () => {
           </LimitContext.Provider>
         </PaginateContext.Provider>
       </CategoryContext.Provider>
+      <Toaster />
       <Service />
       <Footer />
     </>

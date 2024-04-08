@@ -13,6 +13,7 @@ import AdminHomePage from "./pages/Admin/home";
 import ListProductsPage from "./pages/Admin/listProducts";
 import EditProductPage from "./pages/Admin/editProduct";
 import AddProductPage from "./pages/Admin/addProduct";
+import SignUpPage from "./pages/Shop/signup";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="about" element={<AboutPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignUpPage />} />
           <Route
             path="checkout"
             element={<CheckOutPage />}
@@ -34,6 +36,7 @@ function App() {
             path="product/:id"
             element={<DetailsProductPage />}
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
       <Routes>

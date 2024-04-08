@@ -8,7 +8,7 @@ export const useProductQuery = (options) => {
   const { data, ...rest } = useQuery({
     queryKey: ["PRODUCTS_KEY", options],
     queryFn: async () => {
-      return options.id
+      return options.id !== undefined
         ? await getProductById(options.id)
         : await getAllProducts(options);
     },

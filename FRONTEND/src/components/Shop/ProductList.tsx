@@ -8,6 +8,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
 type ProductListProp = {
   ratingProp: number;
 };
@@ -107,17 +109,24 @@ const ProductList = (rating?: ProductListProp) => {
                         >
                           View Details
                         </Link>
-                        <button
-                          onClick={() =>
+                        <Button
+                          onClick={() => {
                             mutate({
-                              productId: prod._id,
+                              productId: prod?._id,
                               quantity: 1,
-                            })
-                          }
+                            });
+                            toast(
+                              "Add to cart successfully",
+                              {
+                                description:
+                                  "You can view your cart in the cart page",
+                              }
+                            );
+                          }}
                           className="btn product-action__addtocart"
                         >
                           Add To Cart
-                        </button>
+                        </Button>
                         <div className="product-actions-more">
                           <span className="product-action__share">
                             Share

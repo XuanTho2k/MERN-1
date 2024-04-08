@@ -44,6 +44,7 @@ const useProductMutation = ({
     },
   });
   const onSubmit = (product: IProdut) => {
+    console.log(product);
     mutate(product);
   };
   return { form, mutate, onSubmit, ...rest };

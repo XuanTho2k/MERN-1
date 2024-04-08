@@ -8,11 +8,12 @@ import { useParams } from "react-router-dom";
 
 const EditForm = () => {
   const { id } = useParams();
-  const { data, isLoading } = useProductQuery(id);
+  const { data, isLoading } = useProductQuery({ id: id });
   const { onSubmit, form, isError } = useProductMutation({
-    action: "CREATE",
+    action: "EDIT",
   });
-  const dataProduct: IProduct = data;
+  let dataProduct: IProduct;
+  if (data) dataProduct = data;
   useEffect(() => {
     form.reset(dataProduct);
   }, [data]);
@@ -20,7 +21,6 @@ const EditForm = () => {
   //category data from api
   const category = useCategoryQuery();
 
-  console.log(category.data);
   if (isError) return <div>Error</div>;
   if (isLoading) return <div>Loading...</div>;
 
@@ -131,19 +131,22 @@ const EditForm = () => {
                   autoComplete="country-name"
                   className="block w-full rounded-md border-0 py-1.5 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
-                  {category.data.map((item: ICategory) => {
-                    return (
-                      <option
-                        value={item._id}
-                        selected={
-                          item._id ===
-                          form.getValues("category")
-                        }
-                      >
-                        {item.name}
-                      </option>
-                    );
-                  })}
+                  {category?.data.map(
+                    (item: ICategory, idx: number) => {
+                      return (
+                        <option
+                          key={idx}
+                          value={item._id}
+                          selected={
+                            item._id ===
+                            form.getValues("category")
+                          }
+                        >
+                          {item.name}
+                        </option>
+                      );
+                    }
+                  )}
                 </select>
               </div>
             </div>

@@ -1,5 +1,8 @@
 import instance from "@/configs/axios";
-import { useLocalStorage } from "@/hooks/useStorage";
+import {
+  useLocalStorage,
+  useSessionStorage,
+} from "@/hooks/useStorage";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +10,8 @@ import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [, setUser] = useLocalStorage("user", {});
+  const [, setUserSession] = useSessionStorage("user", {});
+
   const {
     register,
     handleSubmit,
@@ -23,6 +28,7 @@ const LoginForm = () => {
     },
     onSuccess: (data) => {
       setUser(data);
+      setUserSession(data);
       window.location.href = "/";
     },
     onError: (err) => console.log(err),

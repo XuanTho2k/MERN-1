@@ -204,7 +204,7 @@ const ProductDetails = ({
                       ${" "}
                       {product.price -
                         (product.price *
-                          product.discountPercentage ?? 0) /
+                          product.discountPercentage) /
                           100}
                     </span>
 
